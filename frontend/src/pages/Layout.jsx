@@ -60,7 +60,7 @@ const Layout = () => {
         {/* Sidebar */}
         <aside className="hidden md:flex flex-col w-64 bg-[#1a1a1a] border-r border-zinc-800 p-6 space-y-6">
           <Link to="/" className="text-gray-400 hover:text-green-400 transition-colors">Home</Link>
-          <Link to="/explore" className="text-gray-400 hover:text-green-400 transition-colors">Explore</Link>
+          <Link to="/post/create" className="text-gray-400 hover:text-green-400 transition-colors">Create Post</Link>
           <Link to="/messages" className="text-gray-400 hover:text-green-400 transition-colors">Messages</Link>
           <Link to="/settings" className="text-gray-400 hover:text-green-400 transition-colors">Settings</Link>
         </aside>

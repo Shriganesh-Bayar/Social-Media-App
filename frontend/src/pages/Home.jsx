@@ -1,48 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeart, FaCommentAlt, FaShare } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
-
-const data = [
-  {
-    id: 1234,
-    createdBy: {
-      id: 321,
-      name: "Joe doe",
-    },
-    text: "hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text ",
-    image: "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg",
-    likes: 56,
-    date: "2025-06-14 15:30:00"
-  },
-  {
-    id: 1235,
-    createdBy: {
-      id: 321,
-      name: "Joe doe",
-    },
-    text: "hello hi bye, very large text                                         till here",
-    image: "https://images.pexels.com/photos/1485548/pexels-photo-1485548.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    likes: 56,
-    date: "2025-06-14 15:30:00"
-  },
-  {
-    id: 1236,
-    createdBy: {
-      id: 321,
-      name: "Joe doe",
-    },
-    text: "hello hi bye, very large text                                         till here",
-    image: "https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    likes: 56,
-    date: "2025-06-14 15:30:00"
-  },
-];
-
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
+import axios from "axios";
 
 
 const Home = () => {
@@ -50,14 +9,26 @@ const Home = () => {
   const navigate=useNavigate();
 
   useEffect(() => {
-    setPosts([...data]);
-  }, []);
+    // setPosts([...data]);
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/user/allPost");
+      console.log(res);
+      setPosts(res.data.result); // use res.data instead of 'data'
+    } catch (err) {
+      console.error("Failed to fetch posts", err);
+    }
+  };
+
+  fetchPosts();
+}, []);
+
 
   return (
     <div className="p-4 flex justify-center">
       <div className="w-full max-w-3xl space-y-6">
         {posts.map(post => (
-          <div key={post.id} className="bg-[#1a1a1a] border border-zinc-800 rounded-2xl shadow-lg p-4" >
+          <div key={post._id} className="bg-[#1a1a1a] border border-zinc-800 rounded-2xl shadow-lg p-4" >
             <div className="flex items-center gap-4 mb-2">
               <img
                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -65,15 +36,15 @@ const Home = () => {
                 className="w-10 h-10 rounded-full object-cover border border-zinc-700"
               />
               <div>
-                <p className="text-gray-100 font-medium">{post.createdBy.name}</p>
-                <p className="text-gray-400 text-xs italic">{formatDate(post.date)}</p>
+                <p className="text-gray-100 font-medium">{post.userId.userName}</p>
+                <p className="text-gray-400 text-xs italic">{new Date(post.postTime).toLocaleString()}</p>
               </div>
             </div>
-            <div onClick={()=>navigate(`/post/${post.id}`)}>
-            <p className="text-gray-100 text-base mb-4 whitespace-pre-wrap">{post.text}</p>
-            {post.image && (
+            <div onClick={()=>navigate(`/post/${post._id}`)}>
+            <p className="text-gray-100 text-base mb-4 whitespace-pre-wrap">{post.postDescription}</p>
+            {post.postImage && (
               <img
-              src={post.image}
+              src={post.postImage}
               alt="Post Visual"
               className="w-full max-h-96 object-cover rounded-xl mb-4 border border-zinc-800"
               />
@@ -81,9 +52,9 @@ const Home = () => {
             </div>
             <div className="flex items-center justify-between text-gray-400">
               <button className="flex items-center gap-2 hover:text-green-400">
-                <FaHeart /> {post.likes}
+                <FaHeart /> {post.likes.length}
               </button>
-              <button className="flex items-center gap-2 hover:text-cyan-400">
+              <button className="flex items-center gap-2 hover:text-cyan-400" onClick={()=>navigate(`/post/${post._id}`)}>
                 <FaCommentAlt /> Comment
               </button>
               <button className="flex items-center gap-2 hover:text-yellow-400">

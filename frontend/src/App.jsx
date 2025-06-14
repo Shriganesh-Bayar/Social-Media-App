@@ -7,6 +7,7 @@ import Layout2 from './pages/Layout2'
 
 import Home from './pages/Home'
 import Post from './pages/Post'
+import Addpost from './pages/Addpost'
 
 import Signin from './pages/User/Signin'
 import Login from './pages/User/Login'
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Layout/>}> 
           <Route index element={<Home/>} />
           <Route path="post/:id" element={<Post/>}/>
+          <Route path="post/create" element={<Addpost/>}/>
         </Route>
         <Route path="/user" element={<Layout2/>}>
           <Route path="signin" element={<Signin/>} />

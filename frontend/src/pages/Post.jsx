@@ -1,44 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-
-const data1 = {
-  id: 1234,
-  createdBy: {
-    id: 321,
-    name: "Joe doe",
-  },
-  text: "hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text hello hi bye, very large text ",
-  image: "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg",
-  likes: 56,
-  date: "2025-06-14 15:30:00"
-};
-
-const data2 = [
-  {
-    from: {
-      id: 321,
-      name: "sachin"
-    },
-    text: "with great power comes great responsibility",
-    date: "2025-06-14 15:30:00"
-  },
-  {
-    from: {
-      id: 321,
-      name: "sham"
-    },
-    text: "God is great",
-    date: "2025-06-14 15:30:00"
-  },
-  {
-    from: {
-      id: 321,
-      name: "Tom"
-    },
-    text: "i am fine how are you",
-    date: "2025-06-14 15:30:00"
-  }
-];
+import axios from 'axios';
 
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -46,7 +8,48 @@ const formatDate = (dateString) => {
 };
 
 const Post = () => {
-  let { id } = useParams();
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
+
+  const userId = JSON.parse(localStorage.getItem("user"))._id;
+  // console.log(userId);
+
+  const fetchPost = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/user/onePost/${id}`);
+      setPost(res.data.result);
+      setComments(res.data.result.comments || []);
+    } catch (err) {
+      console.error("Error fetching post:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, [id]);
+
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+    try {
+      setIsPosting(true);
+      await axios.post(`http://localhost:8080/post/comment`, {
+        postId: id,
+        userId: userId,
+        commentMessage: newComment
+      });
+      setNewComment('');
+      fetchPost(); // Refresh comments after posting
+    } catch (err) {
+      console.error("Failed to post comment:", err);
+    } finally {
+      setIsPosting(false);
+    }
+  };
+
+  if (!post) return <div className="text-white p-4">Loading post...</div>;
 
   return (
     <div className="p-4 flex justify-center">
@@ -60,14 +63,14 @@ const Post = () => {
               className="w-10 h-10 rounded-full object-cover border border-zinc-700"
             />
             <div>
-              <p className="text-gray-100 font-medium">{data1.createdBy.name}</p>
-              <p className="text-gray-400 text-xs italic">{formatDate(data1.date)}</p>
+              <p className="text-gray-100 font-medium">{post.userId.userName}</p>
+              <p className="text-gray-400 text-xs italic">{formatDate(post.postTime)}</p>
             </div>
           </div>
-          <p className="text-gray-100 text-base mb-4 whitespace-pre-wrap">{data1.text}</p>
-          {data1.image && (
+          <p className="text-gray-100 text-base mb-4 whitespace-pre-wrap">{post.postDescription}</p>
+          {post.postImage && (
             <img
-              src={data1.image}
+              src={post.postImage}
               alt="Post Visual"
               className="w-full max-h-96 object-cover rounded-xl mb-4 border border-zinc-800"
             />
@@ -77,7 +80,7 @@ const Post = () => {
         {/* Comments Section */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-200 border-b border-zinc-700 pb-2">Comments</h2>
-          {data2.map((comment, index) => (
+          {comments.length > 0 ? comments.map((comment, index) => (
             <div key={index} className="bg-[#1e1e1e] border border-zinc-700 rounded-xl px-4 py-3 flex gap-3">
               <img
                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -86,13 +89,33 @@ const Post = () => {
               />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <p className="text-gray-100 font-semibold">{comment.from.name}</p>
-                  <p className="text-gray-500 text-xs italic">{formatDate(comment.date)}</p>
+                  <p className="text-gray-100 font-semibold">{comment.commenterId.userName}</p>
+                  <p className="text-gray-500 text-xs italic">{formatDate(comment.commentTime)}</p>
                 </div>
-                <p className="text-gray-300 mt-1 whitespace-pre-wrap">{comment.text}</p>
+                <p className="text-gray-300 mt-1 whitespace-pre-wrap">{comment.commentMessage}</p>
               </div>
             </div>
-          ))}
+          )) : (
+            <p className="text-gray-500 italic">No comments yet.</p>
+          )}
+
+          {/* New Comment Box */}
+          <div className="mt-6">
+            <textarea
+              rows={3}
+              className="w-full p-3 rounded-xl bg-[#1a1a1a] border border-zinc-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button
+              onClick={handleCommentSubmit}
+              disabled={isPosting}
+              className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-xl font-semibold text-white disabled:opacity-50"
+            >
+              {isPosting ? 'Posting...' : 'Post Comment'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

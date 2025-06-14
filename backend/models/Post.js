@@ -12,6 +12,9 @@ let postSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    postImage:{
+        type: String,
+    },
     postTime: {
         type: Date,
         default: Date.now
@@ -45,8 +48,8 @@ let postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = {
-    addPost: async ({ postTitle, postDescription, userId }) => {
-        const post = new Post({ postTitle, postDescription, userId });
+    addPost: async ({ postTitle, postDescription, userId, postImage }) => {
+        const post = new Post({ postTitle, postDescription, userId, postImage });
         await post.save();
         return post;
     },
@@ -102,6 +105,20 @@ module.exports = {
                 .sort({ postTime: -1 }); // newest first
             return posts;
         } catch (error) {
+            throw new Error("Could not fetch posts");
+        }
+    },
+    getOnePost: async (postid) => {
+        try {
+            console.log(postid);
+            const posts = await Post.findById(postid)
+                .populate('userId', 'userName email') // populate basic user info
+                .populate('comments.commenterId', 'userName') // populate commenter info
+            
+                // console.log(posts);
+            return posts;
+        } catch (error) {
+            // console.log(error);
             throw new Error("Could not fetch posts");
         }
     },

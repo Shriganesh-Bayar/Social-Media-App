@@ -34,7 +34,19 @@ const login = async (req, res) => {
 
 const getPost = async (req, res) => {
     try {
-        const result = await Post.getPost(req.params.user_id);
+        const result = await Post.getPost();
+        if (result.error) return res.json({ error: result.error });
+        res.json({ result });
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+}
+
+const getOnePost = async (req, res) => {
+    try {
+        let {postid}=req.params;
+        // console.log(postid);    
+        const result = await Post.getOnePost(postid);
         if (result.error) return res.json({ error: result.error });
         res.json({ result });
     } catch (error) {
@@ -62,4 +74,4 @@ const changeProfile = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getPost, getMyPost, changeProfile };
+module.exports = { register, login, getPost, getMyPost, changeProfile, getOnePost };
