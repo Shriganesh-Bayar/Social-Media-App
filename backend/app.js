@@ -25,7 +25,7 @@ main()
         console.log(err);
     });
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/social");
+    await mongoose.connect(process.env.MONGO_URL);
 }
 
 // endpoints
@@ -47,3 +47,5 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT, () => {
     console.log(`Server running at ${process.env.PORT}.....`);
 });
+
+//qHPmWWbIeZgeIqfw

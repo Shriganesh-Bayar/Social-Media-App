@@ -28,7 +28,7 @@ const Addpost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8080/post/add', {...formData,userId}); // adjust URL to match your backend
+      const res = await axios.post('http://social-media-app-o3tu.onrender.com/post/add', {...formData,userId}); // adjust URL to match your backend
       setMessage('Post created successfully!');
       setFormData({
         postTitle: '',
