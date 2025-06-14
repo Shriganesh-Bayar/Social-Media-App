@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Post = require('../models/Post')
 
 const register = async (req, res) => {
     try {
@@ -8,6 +9,7 @@ const register = async (req, res) => {
         if (result.error) return res.json({ error: result.error });
         res.json({ result });
     } catch (error) {
+        console.log(error);
         res.json({ error });
     }
 };
@@ -32,7 +34,7 @@ const login = async (req, res) => {
 
 const getPost = async (req, res) => {
     try {
-        const result = await User.getPost(req.params.user_id);
+        const result = await Post.getPost(req.params.user_id);
         if (result.error) return res.json({ error: result.error });
         res.json({ result });
     } catch (error) {
@@ -42,7 +44,7 @@ const getPost = async (req, res) => {
 
 const getMyPost = async (req, res) => {
     try {
-        const result = await User.getMyPost(req.params.user_id);
+        const result = await Post.getMyPost(req.params.user_id);
         if (result.error) return res.json({ error: result.error });
         res.json({ result });
     } catch (error) {

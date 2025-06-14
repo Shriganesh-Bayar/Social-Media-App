@@ -16,15 +16,15 @@ const UserRouter = require('./routes/UserRouter');
 const PostRouter = require('./routes/PostRouter');
 const Activity = require('./routes/ActivityRouter');
 
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 main()
-.then((res)=>{
-    console.log("connection established");
-}) 
-.catch((err)=>{
-    console.log(err);
-});
-async function main(){
+    .then((res) => {
+        console.log("connection established");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+async function main() {
     await mongoose.connect("mongodb://127.0.0.1:27017/social");
 }
 
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
 app.use('/user', UserRouter);
 app.use('/post', PostRouter);
-app.use('/activity', Activity);
+app.use('/activity', PostRouter);
 
 // error handling
 app.use((err, req, res, next) => {

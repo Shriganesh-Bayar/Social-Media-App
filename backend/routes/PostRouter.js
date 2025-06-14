@@ -1,14 +1,16 @@
 const Post = require('../models/Post');
 const router = require('express').Router();
 const authenticate = require('../middleware/authentication')
-const {addPost, editPost, deletePost} = require('../controller/PostController')
+const { addPostController, editPostController, deletePostController, toggleLikeController, commentPostController } = require('../controller/PostController')
 
 router.get('/', async (req, res, next) => {
     res.json({ message: "In the post router" })
 });
 
-router.post('/add', authenticate, addPost);
-router.post('/edit', authenticate, editPost);
-router.get('/delete/:post_id', authenticate, deletePost);
+router.post('/add', authenticate, addPostController);
+router.post('/edit', authenticate, editPostController);
+router.get('/delete/:post_id/:user_id', authenticate, deletePostController);
+router.get('/like/:post_id/:user_id', authenticate, toggleLikeController);
+router.post('/comment', authenticate, commentPostController);
 
-module.exports=router;
+module.exports = router;
