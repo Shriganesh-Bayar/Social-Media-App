@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const register = async (req, res) => {
     try {
-        // console.log(req.body.data)
+        // console.log(req.body)
         const result = await User.register(req.body);
         if (result.error) return res.json({ error: result.error });
         res.json({ result });
@@ -14,6 +14,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
+        // console.log(req.body);
         const result = await User.login(req.body);
         if (result.error) return res.json({ error: result.error });
 

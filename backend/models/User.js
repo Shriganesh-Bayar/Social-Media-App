@@ -22,11 +22,10 @@ let userSchema=new mongoose.Schema({
 const User=mongoose.model("User",userSchema);
 
 module.exports = {
-    register:async ({userName, email, unhashedPassword})=>{
-        const password = bcrypt.hashSync(unhashedPassword, 10);
+    register:async ({username, email, password})=>{
+        let password2 = bcrypt.hashSync(password, 10);
         try{
-            let result=await User.insertOne({userName,email,password});
-            // console.log(result);
+            let result=await User.insertOne({userName:username,email,password:password2});
             return result;
         } catch(err){
             return {
@@ -34,10 +33,10 @@ module.exports = {
             }
         }    
     },
-    login:async ({userName, password})=>{
+    login:async ({username, password})=>{
         try{
-            let user=await User.findOne({userName});
-            console.log(user);
+            let user=await User.findOne({userName:username});
+            // console.log(user);
             if(user===null) {
                 return {error: "user does not exists"}
             }
