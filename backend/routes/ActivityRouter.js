@@ -10,3 +10,4 @@ router.get('/', async (req, res, next) => {
 router.get('/like/:post_id', authenticate, likePost);
 router.post('/comment', authenticate, commentPost);
 
+module.exports=router;

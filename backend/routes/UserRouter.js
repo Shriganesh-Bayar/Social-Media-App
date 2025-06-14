@@ -12,3 +12,5 @@ router.post('/register', register);
 router.get('/post/:user_id', authenticate, getPost);
 router.get('/myPost/:user_id', authenticate, getMyPost);
 router.post('/changeProfile/', authenticate, changeProfile);
+
+module.exports=router;

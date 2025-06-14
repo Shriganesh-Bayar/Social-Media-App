@@ -16,6 +16,18 @@ const UserRouter = require('./routes/UserRouter');
 const PostRouter = require('./routes/PostRouter');
 const Activity = require('./routes/ActivityRouter');
 
+const mongoose=require("mongoose");
+main()
+.then((res)=>{
+    console.log("connection established");
+}) 
+.catch((err)=>{
+    console.log(err);
+});
+async function main(){
+    await mongoose.connect("mongodb://127.0.0.1:27017/social");
+}
+
 // endpoints
 app.get('/', (req, res) => {
     console.log("Server has started....");

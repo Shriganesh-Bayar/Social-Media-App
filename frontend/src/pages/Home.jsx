@@ -57,7 +57,7 @@ const Home = () => {
     <div className="p-4 flex justify-center">
       <div className="w-full max-w-3xl space-y-6">
         {posts.map(post => (
-          <div key={post.id} className="bg-[#1a1a1a] border border-zinc-800 rounded-2xl shadow-lg p-4" onClick={()=>navigate(`/post/${post.id}`)}>
+          <div key={post.id} className="bg-[#1a1a1a] border border-zinc-800 rounded-2xl shadow-lg p-4" >
             <div className="flex items-center gap-4 mb-2">
               <img
                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -69,14 +69,16 @@ const Home = () => {
                 <p className="text-gray-400 text-xs italic">{formatDate(post.date)}</p>
               </div>
             </div>
+            <div onClick={()=>navigate(`/post/${post.id}`)}>
             <p className="text-gray-100 text-base mb-4 whitespace-pre-wrap">{post.text}</p>
             {post.image && (
               <img
-                src={post.image}
-                alt="Post Visual"
-                className="w-full max-h-96 object-cover rounded-xl mb-4 border border-zinc-800"
+              src={post.image}
+              alt="Post Visual"
+              className="w-full max-h-96 object-cover rounded-xl mb-4 border border-zinc-800"
               />
             )}
+            </div>
             <div className="flex items-center justify-between text-gray-400">
               <button className="flex items-center gap-2 hover:text-green-400">
                 <FaHeart /> {post.likes}

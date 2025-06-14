@@ -10,3 +10,5 @@ router.get('/', async (req, res, next) => {
 router.post('/add', authenticate, addPost);
 router.post('/edit', authenticate, editPost);
 router.get('/delete/:post_id', authenticate, deletePost);
+
+module.exports=router;
