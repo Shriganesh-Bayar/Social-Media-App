@@ -6,9 +6,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const cors = require('cors');
+
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://devgram.onrender.com", // deployed frontend domain
+];
+
 app.use(cors({
-    origin: "*",
-    credential: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 
 // routers
