@@ -19,7 +19,7 @@ const Post = () => {
 
   const fetchPost = async () => {
     try {
-      const res = await axios.get(`http://social-media-app-o3tu.onrender.com/user/onePost/${id}`);
+      const res = await axios.get(`https://social-media-app-o3tu.onrender.com/user/onePost/${id}`);
       setPost(res.data.result);
       setComments(res.data.result.comments || []);
     } catch (err) {
@@ -35,7 +35,7 @@ const Post = () => {
     if (!newComment.trim()) return;
     try {
       setIsPosting(true);
-      await axios.post(`http://social-media-app-o3tu.onrender.com/post/comment`, {
+      await axios.post(`https://social-media-app-o3tu.onrender.com/post/comment`, {
         postId: id,
         userId: userId,
         commentMessage: newComment

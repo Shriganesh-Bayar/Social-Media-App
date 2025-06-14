@@ -24,7 +24,7 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://social-media-app-o3tu.onrender.com/user/register', formData);
+      const res = await axios.post('https://social-media-app-o3tu.onrender.com/user/register', formData);
       // console.log(res);
       if (res.data.result) {
         localStorage.setItem('user', JSON.stringify(res.data.result));

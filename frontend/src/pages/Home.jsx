@@ -12,7 +12,7 @@ const Home = () => {
     // setPosts([...data]);
   const fetchPosts = async () => {
     try {
-      const res = await axios.get("http://social-media-app-o3tu.onrender.com/user/allPost");
+      const res = await axios.get("https://social-media-app-o3tu.onrender.com/user/allPost");
       console.log(res);
       setPosts(res.data.result); // use res.data instead of 'data'
     } catch (err) {
